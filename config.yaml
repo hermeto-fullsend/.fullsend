@@ -1,0 +1,42 @@
+# fullsend organization configuration
+# https://github.com/fullsend-ai/fullsend
+#
+# This file is managed by fullsend. Manual edits may be overwritten.
+version: "1"
+dispatch:
+    platform: github-actions
+    mode: oidc-mint
+inference:
+    provider: vertex
+defaults:
+    roles:
+        - fullsend
+        - triage
+        - coder
+        - review
+        - retro
+        - prioritize
+    max_implementation_retries: 2
+    auto_merge: false
+agents:
+    - role: fullsend
+      name: ""
+      slug: ""
+    - role: triage
+      name: ""
+      slug: ""
+    - role: coder
+      name: ""
+      slug: ""
+    - role: review
+      name: ""
+      slug: ""
+    - role: retro
+      name: ""
+      slug: ""
+    - role: prioritize
+      name: ""
+      slug: ""
+repos:
+    .fullsend:
+        enabled: false
