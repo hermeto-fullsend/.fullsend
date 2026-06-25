@@ -40,5 +40,9 @@ agents:
 repos:
     .fullsend:
         enabled: false
+    .github:
+        enabled: true
     hermeto:
+        enabled: true
+    workflows:
         enabled: true
