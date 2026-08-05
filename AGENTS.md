@@ -46,7 +46,19 @@ subject must start with a type prefix (`feat`, `fix`, `refactor`, `docs`,
 Check `CONTRIBUTING.md` or `CLAUDE.md` for repo-specific allowed types. When
 reviewing PRs, flag commits or PR titles that do not follow this format.
 
-## 5. Goal-driven execution
+## 5. Cross-repo references
+
+Never use GitHub cross-repo issue references like `org/repo#123` — they
+create backlink mentions in the upstream repository. Instead, use markdown
+links with `redirect.github.com`:
+
+```
+[org/repo#123](https://redirect.github.com/org/repo/issues/123)
+```
+
+This renders as a clickable link without notifying the upstream repository.
+
+## 6. Goal-driven execution
 
 Convert the issue into verifiable success criteria before writing code.
 Determine:
