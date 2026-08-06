@@ -1,5 +1,14 @@
 # AGENTS.md
 
+## 0. Relationship to upstream
+
+hermeto-fullsend is a downstream extension of the upstream hermeto project,
+maintained to integrate Fullsend-specific functionality. It is not dependent
+on upstream decisions or timelines. Never label an issue as blocked on
+upstream, never recommend waiting for upstream to act first, and never defer
+design choices to upstream. If upstream has not implemented something, that
+is the reason this fork exists — implement it here.
+
 ## 1. Think before acting
 
 State your assumptions explicitly before writing code. When the issue
