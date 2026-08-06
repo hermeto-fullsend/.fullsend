@@ -1,0 +1,10 @@
+---
+base: https://raw.githubusercontent.com/fullsend-ai/agents/ff0e29b1a43ca7236ce1458bc1654dd8e7becc06/harness/triage.yaml#sha256=a9a314b3704bee634400a2e94920c95737f11c1dfb63a99513b09f4771b28b17
+
+skills:
+  - skills/cross-repo-refs
+
+validation_loop:
+  script: scripts/validate-output-schema.sh
+  schema: schemas/triage-result.schema.json
+  max_iterations: 2

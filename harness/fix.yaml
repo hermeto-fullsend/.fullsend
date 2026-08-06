@@ -1,0 +1,10 @@
+---
+base: https://raw.githubusercontent.com/fullsend-ai/agents/ff0e29b1a43ca7236ce1458bc1654dd8e7becc06/harness/fix.yaml#sha256=64d33db0c7ef7180070d24540aa56eae34bbb827c6bfb80eace5cf62948cd6df
+
+skills:
+  - skills/cross-repo-refs
+
+validation_loop:
+  script: scripts/validate-output-schema.sh
+  schema: schemas/fix-result.schema.json
+  max_iterations: 2

@@ -1,0 +1,10 @@
+---
+base: https://raw.githubusercontent.com/fullsend-ai/agents/ff0e29b1a43ca7236ce1458bc1654dd8e7becc06/harness/prioritize.yaml#sha256=21cf62dce54fce3ae23cf5e3dfe901d03b69bc5e91533288ffa772187b24e95d
+
+skills:
+  - skills/cross-repo-refs
+
+validation_loop:
+  script: scripts/validate-output-schema.sh
+  schema: schemas/prioritize-result.schema.json
+  max_iterations: 2

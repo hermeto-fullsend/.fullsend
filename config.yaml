@@ -27,6 +27,19 @@ repos:
         enabled: true
     workflows:
         enabled: true
+agents:
+    - name: code
+      source: harness/code.yaml
+    - name: triage
+      source: harness/triage.yaml
+    - name: review
+      source: harness/review.yaml
+    - name: fix
+      source: harness/fix.yaml
+    - name: retro
+      source: harness/retro.yaml
+    - name: prioritize
+      source: harness/prioritize.yaml
 allowed_remote_resources:
     - https://raw.githubusercontent.com/fullsend-ai/fullsend/
     - https://raw.githubusercontent.com/fullsend-ai/agents/
