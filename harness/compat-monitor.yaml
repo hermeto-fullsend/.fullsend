@@ -1,0 +1,26 @@
+---
+agent: agents/compat-monitor.md
+model: sonnet
+effort: high
+
+skills:
+  - skills/cross-repo-refs
+
+pre_script: scripts/compat-monitor-pre.sh
+
+host_files:
+  - src: ${FULLSEND_WORKSPACE}/ecosystem-data.json
+    dest: /sandbox/workspace/ecosystem-data.json
+
+validation_loop:
+  script: scripts/validate-output-schema.sh
+  schema: schemas/compat-monitor-result.schema.json
+  max_iterations: 2
+
+post_script: scripts/compat-monitor-post.sh
+
+timeout_minutes: 30
+
+env:
+  runner:
+    FULLSEND_SOURCE_REPO: ${FULLSEND_SOURCE_REPO}
