@@ -158,6 +158,13 @@ jobs:
                     STAGE="prioritize"
                   fi
                   ;;
+                /fs-design-review)
+                  if [[ "${ISSUE_HAS_PR}" == "true" ]]; then
+                    if [[ "${COMMENT_USER_TYPE}" != "Bot" ]] && is_authorized triage; then
+                      STAGE="design-review"
+                    fi
+                  fi
+                  ;;
                 *)
                   # Intentionally weaker gate: allows external reporters to
                   # re-trigger triage by providing clarification on needs-info
@@ -353,6 +360,7 @@ jobs:
           STAGE_ROLE="$STAGE"
           case "$STAGE" in
             code|fix) STAGE_ROLE="coder" ;;
+            design-review) STAGE_ROLE="review" ;;
           esac
 
           ROLES=$(yq '.defaults.roles[]' config.yaml 2>/dev/null || echo "")
