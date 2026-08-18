@@ -158,6 +158,11 @@ jobs:
                     STAGE="prioritize"
                   fi
                   ;;
+                /fs-security-audit)
+                  if [[ "${COMMENT_USER_TYPE}" != "Bot" ]] && is_authorized; then
+                    STAGE="security-audit"
+                  fi
+                  ;;
                 *)
                   # Intentionally weaker gate: allows external reporters to
                   # re-trigger triage by providing clarification on needs-info

@@ -1,0 +1,15 @@
+---
+agent: agents/security-audit.md
+
+model: opus
+
+skills:
+  - skills/cross-repo-refs
+  - skills/security-audit
+
+validation_loop:
+  script: scripts/validate-output-schema.sh
+  schema: schemas/security-audit-result.schema.json
+  max_iterations: 2
+
+timeout_minutes: 30
