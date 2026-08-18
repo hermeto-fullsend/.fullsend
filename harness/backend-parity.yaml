@@ -1,0 +1,10 @@
+---
+agent: agents/backend-parity.md
+
+skills:
+  - skills/cross-repo-refs
+
+validation_loop:
+  script: scripts/validate-output-schema.sh
+  schema: schemas/backend-parity-result.schema.json
+  max_iterations: 2
