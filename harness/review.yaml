@@ -3,6 +3,7 @@ base: https://raw.githubusercontent.com/fullsend-ai/agents/ff0e29b1a43ca7236ce14
 
 skills:
   - skills/cross-repo-refs
+  - skills/hermeto-coding-guide
 
 validation_loop:
   script: scripts/validate-output-schema.sh

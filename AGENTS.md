@@ -78,3 +78,11 @@ Determine:
 
 Use these criteria as checkpoints. If a checkpoint fails, fix the root
 cause — do not weaken the check.
+
+## 7. Hermeto coding conventions
+
+When writing or reviewing Python code in the hermeto repository, follow the
+project's coding best practices. Key principles: comments explain why not how,
+functions under 30 lines, prefer immutable styles, use descriptive test names,
+and favor stdlib over custom implementations. See the hermeto-coding-guide
+skill for the complete reference.
