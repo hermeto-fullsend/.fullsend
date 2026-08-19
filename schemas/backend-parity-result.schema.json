@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Backend Parity Result",
+  "type": "object",
+  "required": ["feature_matrix", "gaps", "summary"],
+  "additionalProperties": false,
+  "properties": {
+    "feature_matrix": {
+      "type": "array",
+      "description": "Per-backend feature support assessment",
+      "items": {
+        "type": "object",
+        "required": ["backend", "features"],
+        "additionalProperties": false,
+        "properties": {
+          "backend": {
+            "type": "string",
+            "description": "Backend type key (e.g. pip, npm, cargo)"
+          },
+          "experimental": {
+            "type": "boolean",
+            "description": "Whether this backend uses the x- prefix"
+          },
+          "features": {
+            "type": "object",
+            "required": [
+              "proxy_support",
+              "checksum_verification",
+              "sbom_completeness",
+              "project_file_injection",
+              "vcs_dependency_support",
+              "workspace_support",
+              "binary_filtering",
+              "async_downloading",
+              "error_handling",
+              "documentation",
+              "integration_tests"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "proxy_support": { "$ref": "#/$defs/feature_status" },
+              "checksum_verification": { "$ref": "#/$defs/feature_status" },
+              "sbom_completeness": { "$ref": "#/$defs/feature_status" },
+              "project_file_injection": { "$ref": "#/$defs/feature_status" },
+              "vcs_dependency_support": { "$ref": "#/$defs/feature_status" },
+              "workspace_support": { "$ref": "#/$defs/feature_status" },
+              "binary_filtering": { "$ref": "#/$defs/feature_status" },
+              "async_downloading": { "$ref": "#/$defs/feature_status" },
+              "error_handling": { "$ref": "#/$defs/feature_status" },
+              "documentation": { "$ref": "#/$defs/feature_status" },
+              "integration_tests": { "$ref": "#/$defs/feature_status" }
+            }
+          }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "description": "Identified parity gaps, ranked by impact",
+      "items": {
+        "type": "object",
+        "required": ["backend", "feature", "impact", "description", "remediation"],
+        "additionalProperties": false,
+        "properties": {
+          "backend": {
+            "type": "string",
+            "description": "Affected backend"
+          },
+          "feature": {
+            "type": "string",
+            "description": "Missing or incomplete feature dimension"
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "Impact if this gap remains unaddressed"
+          },
+          "description": {
+            "type": "string",
+            "description": "What is missing and why it matters"
+          },
+          "remediation": {
+            "type": "string",
+            "description": "Concrete suggestion for closing the gap"
+          },
+          "create_issue": {
+            "type": "boolean",
+            "description": "Whether to create a GitHub issue for this gap"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["total_backends", "total_gaps", "high_impact_gaps", "analysis"],
+      "additionalProperties": false,
+      "properties": {
+        "total_backends": {
+          "type": "integer",
+          "description": "Number of backends analyzed"
+        },
+        "total_gaps": {
+          "type": "integer",
+          "description": "Total number of identified gaps"
+        },
+        "high_impact_gaps": {
+          "type": "integer",
+          "description": "Number of high-impact gaps"
+        },
+        "analysis": {
+          "type": "string",
+          "description": "Brief narrative summary of findings"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "feature_status": {
+      "type": "object",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["full", "partial", "none", "not_applicable"],
+          "description": "Support level for this feature"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Brief explanation of current support or gap"
+        }
+      }
+    }
+  }
+}
