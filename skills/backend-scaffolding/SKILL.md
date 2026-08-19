@@ -42,7 +42,7 @@ for downloads and retry logic.
 
 Two files must be updated to register the backend:
 
-### 1. `hermeto/core/models/input.py`
+### `hermeto/core/models/input.py`
 
 - Add the type string to the `PackageManagerType` literal union.
   Experimental backends use the `x-` prefix (e.g., `"x-maven"`).
@@ -51,7 +51,7 @@ Two files must be updated to register the backend:
 - Add the new input class to the `PackageInput` discriminated union.
 - Add a `<backend>_packages` property to the `Request` class.
 
-### 2. `hermeto/core/resolver.py`
+### `hermeto/core/resolver.py`
 
 - Import the backend's fetch function.
 - Add an entry to the `_package_managers` dict mapping the type string
