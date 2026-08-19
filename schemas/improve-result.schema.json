@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "improve-result.schema.json",
+  "title": "Improve Agent Result",
+  "description": "Structured findings from the improve agent, validated by the harness before the post-script runs (ADR 0022).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action"],
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": ["improvements", "clean", "failure"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable summary of the scan."
+    },
+    "findings": {
+      "type": "array",
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/finding" }
+    },
+    "reason": {
+      "type": "string",
+      "enum": ["tool-failure", "missing-context", "token-limit"],
+      "description": "Required when action is 'failure'."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "action": { "const": "improvements" } }, "required": ["action"] },
+      "then": { "required": ["summary", "findings"] }
+    },
+    {
+      "if": { "properties": { "action": { "const": "clean" } }, "required": ["action"] },
+      "then": { "required": ["summary"] }
+    },
+    {
+      "if": { "properties": { "action": { "const": "failure" } }, "required": ["action"] },
+      "then": { "required": ["reason"] }
+    }
+  ],
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "title", "body", "file"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": ["code-quality", "tech-debt", "test-coverage", "docs"]
+        },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "body": { "type": "string", "minLength": 1 },
+        "file": { "type": "string", "minLength": 1 },
+        "line": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+---
+agent: agents/improve.md
+model: sonnet
+effort: high
+
+skills:
+  - skills/cross-repo-refs
+  - skills/hermeto-coding-guide
+
+validation_loop:
+  script: scripts/validate-output-schema.sh
+  schema: schemas/improve-result.schema.json
+  max_iterations: 2
+
+post_script: scripts/improve-post.sh
+
+timeout_minutes: 30
+
+env:
+  runner:
+    FULLSEND_SOURCE_REPO: ${FULLSEND_SOURCE_REPO}
