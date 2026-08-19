@@ -16,6 +16,7 @@ defaults:
         - review
         - retro
         - prioritize
+        - security-audit
     max_implementation_retries: 2
     auto_merge: false
 repos:
@@ -40,6 +41,8 @@ agents:
       source: harness/retro.yaml
     - name: prioritize
       source: harness/prioritize.yaml
+    - name: security-audit
+      source: harness/security-audit.yaml
 allowed_remote_resources:
     - https://raw.githubusercontent.com/fullsend-ai/fullsend/
     - https://raw.githubusercontent.com/fullsend-ai/agents/
