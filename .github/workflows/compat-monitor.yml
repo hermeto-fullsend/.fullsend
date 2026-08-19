@@ -1,0 +1,80 @@
+---
+# fullsend-stage: compat-monitor
+name: Compatibility Monitor
+
+permissions:
+  actions: write
+  contents: read
+  id-token: write
+  issues: write
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Weekly on Monday at 09:00 UTC
+  workflow_dispatch:
+    inputs:
+      source_repo:
+        description: 'Repository to monitor (defaults to hermeto)'
+        required: false
+        type: string
+
+concurrency:
+  group: fullsend-compat-monitor
+  cancel-in-progress: true
+
+jobs:
+  compat-monitor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      FULLSEND_SOURCE_REPO: ${{ inputs.source_repo || format('{0}/hermeto', github.repository_owner) }}
+
+    steps:
+      - name: Checkout .fullsend repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Checkout hermeto source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ env.FULLSEND_SOURCE_REPO }}
+          path: hermeto-source
+
+      - name: Mint fullsend token
+        id: app-token
+        uses: fullsend-ai/fullsend/.github/actions/mint-token@v0
+        with:
+          role: fullsend
+          repos: .fullsend,${{ env.FULLSEND_SOURCE_REPO }}
+          mint_url: ${{ vars.FULLSEND_MINT_URL }}
+
+      - name: Set up workspace
+        run: |
+          mkdir -p /tmp/workspace
+          cp -r hermeto-source/* /tmp/workspace/
+        env:
+          FULLSEND_WORKSPACE: /tmp/workspace
+
+      - name: Run pre-script
+        run: bash scripts/compat-monitor-pre.sh
+        env:
+          FULLSEND_WORKSPACE: /tmp/workspace
+
+      - name: Run agent
+        uses: fullsend-ai/fullsend/.github/actions/run-agent@v0
+        with:
+          harness: harness/compat-monitor.yaml
+          install_mode: per-org
+          mint_url: ${{ vars.FULLSEND_MINT_URL }}
+          gcp_region: ${{ vars.FULLSEND_GCP_REGION }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          FULLSEND_WORKSPACE: /tmp/workspace
+          FULLSEND_GCP_WIF_PROVIDER: ${{ secrets.FULLSEND_GCP_WIF_PROVIDER }}
+          FULLSEND_GCP_PROJECT_ID: ${{ secrets.FULLSEND_GCP_PROJECT_ID }}
+
+      - name: Run post-script
+        run: bash scripts/compat-monitor-post.sh
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          FULLSEND_WORKSPACE: /tmp/workspace
+          FULLSEND_SOURCE_REPO: ${{ env.FULLSEND_SOURCE_REPO }}
