@@ -40,7 +40,7 @@ for downloads and retry logic.
 
 ## Registration
 
-Three files must be updated to register the backend:
+Two files must be updated to register the backend:
 
 ### 1. `hermeto/core/models/input.py`
 
@@ -57,10 +57,9 @@ Three files must be updated to register the backend:
 - Add an entry to the `_package_managers` dict mapping the type string
   to `fetch_<backend>_source`.
 
-### 3. No plugin discovery
-
-There is no metaclass, decorator, or entry-point system. Registration
-is purely via explicit imports and dict entries in the two files above.
+**Note:** There is no metaclass, decorator, or entry-point system.
+Registration is purely via explicit imports and dict entries in the two
+files above.
 
 ## Unit tests
 
