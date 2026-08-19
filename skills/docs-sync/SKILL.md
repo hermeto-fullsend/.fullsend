@@ -28,7 +28,8 @@ Other mappings:
 | `hermeto/core/extras/config_show.py` | `docs/configuration.md` |
 | `hermeto/interface/cli.py` | `docs/usage.md` |
 | `hermeto/core/models/sbom.py` | `docs/sbom.md` |
-| `hermeto/core/models/input.py` | `docs/usage.md` + backend docs |
+| `hermeto/core/models/input.py` | `docs/usage.md`; for each affected backend, also its doc from the package manager table above |
+| New subdirectory under `hermeto/core/package_managers/` | New `docs/<name>.md` + `mkdocs.yml` nav entry |
 
 ## When to flag
 
