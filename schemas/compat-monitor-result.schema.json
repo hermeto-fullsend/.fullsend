@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "compat-monitor-result.schema.json",
+  "title": "Compatibility Monitor Result",
+  "description": "Structured compatibility report from the compat-monitor agent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["summary", "backends", "recommended_actions"],
+  "properties": {
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One-paragraph overview of the compatibility state across all backends."
+    },
+    "backends": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status", "hermeto_version", "latest_version", "analysis"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["pip", "npm", "yarn", "pnpm", "gomod", "cargo", "bundler", "rpm", "vcpkg", "generic"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["compatible", "at-risk", "action-required", "unknown"]
+          },
+          "hermeto_version": {
+            "type": "string",
+            "description": "Version or version range Hermeto currently supports, as determined from the source code."
+          },
+          "latest_version": {
+            "type": "string",
+            "description": "Latest stable upstream version."
+          },
+          "analysis": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Detailed analysis of compatibility, including specific changes that affect Hermeto."
+          },
+          "breaking_changes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["description", "severity", "affected_area"],
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": ["critical", "high", "medium", "low"]
+                },
+                "affected_area": {
+                  "type": "string",
+                  "description": "Which part of Hermeto is affected (e.g., lockfile parser, fetcher, resolver)."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "recommended_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["backend", "action", "priority"],
+        "properties": {
+          "backend": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Specific action to take (e.g., 'Add support for npm lockfile v4')."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "issue_title": {
+            "type": "string",
+            "description": "Suggested title for a GitHub issue to track this action."
+          }
+        }
+      }
+    }
+  }
+}
