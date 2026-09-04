@@ -19,3 +19,6 @@ create_issues:
         repos:
             - hermeto-fullsend/.fullsend
             - fullsend-ai/fullsend
+models:
+    aliases:
+        opus: claude-opus-4-6
