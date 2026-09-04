@@ -1,0 +1,54 @@
+---
+# lint-workflow-size: max-lines=60
+name: Backend Parity Scheduler
+
+on:
+  # schedule:
+  #   - cron: '0 9 1 * *'  # First day of each month at 09:00 UTC
+  workflow_dispatch: {}
+
+concurrency:
+  group: fullsend-backend-parity-scheduler
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    name: Dispatch backend parity analysis
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout .fullsend repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Mint fullsend token
+        id: app-token
+        uses: fullsend-ai/fullsend/.github/actions/mint-token@v0
+        with:
+          role: fullsend
+          repos: .fullsend
+          mint_url: ${{ vars.FULLSEND_MINT_URL }}
+
+      - name: Dispatch backend parity analysis
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          ORG: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+
+          SOURCE_REPO="${ORG}/hermeto"
+          EVENT_PAYLOAD='{"issue": {"html_url": "https://github.com/'"${SOURCE_REPO}"'", "number": 0}}'
+
+          echo "Dispatching backend parity analysis for ${SOURCE_REPO}..."
+
+          gh workflow run backend-parity.yml \
+            --repo "${GITHUB_REPOSITORY}" \
+            -f event_type="schedule" \
+            -f source_repo="${SOURCE_REPO}" \
+            -f event_payload="${EVENT_PAYLOAD}"
+
+          echo "Dispatched."
