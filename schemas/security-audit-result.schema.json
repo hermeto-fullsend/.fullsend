@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "security-audit-result.schema.json",
+  "title": "Security Audit Agent Result",
+  "description": "Structured output from the security audit agent, validated by the harness before the post-script runs (ADR 0022).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "repo"],
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": ["findings", "clean", "failure"]
+    },
+    "repo": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+    "audit_scope": {
+      "type": "string",
+      "description": "Summary of what was audited (e.g. 'full codebase', 'fetcher modules', 'PR #123 diff')."
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding" }
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable summary of the audit results."
+    },
+    "reason": {
+      "type": "string",
+      "enum": ["tool-failure", "missing-context", "token-limit"],
+      "description": "Required when action is 'failure'."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "action": { "const": "findings" } }, "required": ["action"] },
+      "then": { "required": ["summary", "findings"] }
+    },
+    {
+      "if": { "properties": { "action": { "const": "clean" } }, "required": ["action"] },
+      "then": { "required": ["summary"] }
+    },
+    {
+      "if": { "properties": { "action": { "const": "failure" } }, "required": ["action"] },
+      "then": { "required": ["reason"] }
+    }
+  ],
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": ["severity", "category", "file", "description", "attack_scenario"],
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "info"]
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "dependency-confusion",
+            "lockfile-injection",
+            "path-traversal",
+            "checksum-bypass",
+            "command-injection",
+            "toctou",
+            "network-security",
+            "credential-exposure",
+            "cross-backend-inconsistency",
+            "other"
+          ]
+        },
+        "file": { "type": "string", "minLength": 1 },
+        "line": { "type": "integer", "minimum": 1 },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the vulnerability is."
+        },
+        "attack_scenario": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Concrete scenario: attacker action -> exploitation path -> impact."
+        },
+        "affected_backends": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Which package manager backends are affected."
+        },
+        "remediation": {
+          "type": "string",
+          "description": "Recommended fix approach."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
