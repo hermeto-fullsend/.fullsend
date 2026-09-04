@@ -22,11 +22,11 @@ repos:
     .fullsend:
         enabled: false
     .github:
-        enabled: true
+        enabled: false
     hermeto:
-        enabled: true
+        enabled: false
     workflows:
-        enabled: true
+        enabled: false
 agents:
     - name: code
       source: harness/code.yaml
